@@ -1,0 +1,90 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0A Site Health addon by WP Speed Doctor\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-06 11:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.1; wp-6.9.1; php-8.3.28\n"
+"X-Domain: wpsd-site-health"
+
+#. Name of the plugin
+msgid "0A Site Health addon by WP Speed Doctor"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Adds into Site Health menu tabs with bloated PHP plugins and CSS/JS files."
+msgstr ""
+
+#: main.php:141
+msgid "All good here, no bloat."
+msgstr ""
+
+#: main.php:13
+msgid "CSS/JS Bloat"
+msgstr ""
+
+#: main.php:139
+msgid "Current page TTFB: "
+msgstr ""
+
+#: display-data.php:8
+msgid "Duration"
+msgstr ""
+
+#: display-data.php:6
+msgid "File Count"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://wpspeeddoctor.com/"
+msgstr ""
+
+#: main.php:138
+msgid "Identify what plugins and themes are making your site slow"
+msgstr ""
+
+#: main.php:140
+msgid "List of enqueued resources that should not be present on this page:"
+msgstr ""
+
+#: class-folder.php:42
+msgid "ms"
+msgstr ""
+
+#: class-folder.php:40
+msgid "N/A"
+msgstr ""
+
+#: display-data.php:7
+msgid "OPcache Size"
+msgstr ""
+
+#: main.php:12
+msgid "PHP Bloat"
+msgstr ""
+
+#: main.php:194
+msgid "Plugins"
+msgstr ""
+
+#: main.php:195
+msgid "Themes"
+msgstr ""
+
+#: main.php:193
+msgid "WordPress Core"
+msgstr ""
+
+#. Author of the plugin
+msgid "WP Speed Doctor"
+msgstr ""
