@@ -281,6 +281,21 @@ class Folder{
 		$version = $theme->get('Version') ?? 'unknown';
 		$name = $theme->get('Name') ?? 'unknown';
 		
+		//When the theme is disabled, like when using Oxygen builder
+		if(empty($this->data[Consts::WP_THEMES])){
+			$this->data[Consts::WP_THEMES] = [
+				$current_theme => [
+					Consts::VERSION => $version,
+					Consts::SLUG => $current_theme,
+					Consts::NAME => $name,
+					Consts::HASH => hash('fnv164', $current_theme),
+					Consts::DURATION => 0,
+					Consts::FILE_COUNT => 0,
+					Consts::FILE_OPCACHE_SIZE => 0,
+				],
+			];
+		}
+		
 		foreach($this->data[Consts::WP_THEMES] as $dir => &$theme_stats){
 			if($dir === $current_theme){
 				$theme_stats[Consts::VERSION] = $version;
@@ -347,3 +362,4 @@ class Folder{
 	}
 	
 }
+
