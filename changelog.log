@@ -1,3 +1,6 @@
+== 1.3.1 | 27th February 2026 ==
+* bugfix, added placeholder data when the theme is disabled to prevent warnings
+
 == 1.3 | 6th February 2026 ==
 * testing
 * small bug fixes
@@ -13,4 +16,5 @@
 * displaying results bugfix
 
 == 1.0 | 18th December 2025 ==
+
 * Initial Version
