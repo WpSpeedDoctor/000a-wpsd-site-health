@@ -3,8 +3,8 @@
 /*
 * Plugin Name: Site Health addon by WP Speed Doctor
 * Description: Adds into Site Health menu tabs with bloated PHP plugins and CSS/JS files. 
-* Version: 1.3
-* Updated: 2025-02-06
+* Version: 1.3.1
+* Updated: 2026-02-27
 * Author: WP Speed Doctor
 * Author URI: https://wpspeeddoctor.com/
 * Text Domain: wpsd-site-health
@@ -31,4 +31,5 @@ switch( true ){
 function load_language_domain(){
 
 	load_plugin_textdomain('wpsd-site-health', false, basename(__DIR__) . '/languages/');
+
 }
