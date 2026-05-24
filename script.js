@@ -2,6 +2,7 @@
 	const c = WPSDsH.consts;
 	const data = WPSDsH.data;
 	const texts = WPSDsH.texts;
+	const anchors = WPSDsH.anchors || {};
 
 	let sortState = { column: 'duration', direction: 'desc' };
 
@@ -33,6 +34,11 @@
 		tbody.appendChild(headerRow);
 	}
 
+	function getLinkedName(categoryDataKey, key, nameVersion) {
+		const id = anchors[categoryDataKey]?.[key];
+		return id ? `<a href="#${id}">${nameVersion}</a>` : nameVersion;
+	}
+
 	function populateStatic(categoryDataKey, tbodyId, useDirAsName, displayName) {
 		const tbody = document.getElementById(tbodyId);
 		if(!tbody) return;
@@ -43,12 +49,13 @@
 			const name = useDirAsName ? key : getValue(item, c.NAME);
 			const version = getValue(item, c.VERSION);
 			const nameVersion = version ? `${name} <small>${version}</small>` : name;
+			const linkedName = getLinkedName(categoryDataKey, key, nameVersion);
 			const fileCountDisplay = getDisplayValue(item, c.RESULT_COUNT, c.FILE_COUNT);
 			const opcacheDisplay = getDisplayValue(item, c.RESULT_OPCACHE, c.FILE_OPCACHE_SIZE);
 			const durationDisplay = getDisplayValue(item, c.RESULT_TIME, c.DURATION);
 			const row = document.createElement('tr');
 			row.innerHTML = `
-				<td>${nameVersion}</td>
+				<td>${linkedName}</td>
 				<td>${fileCountDisplay}</td>
 				<td>${opcacheDisplay}</td>
 				<td>${durationDisplay}</td>
@@ -63,22 +70,23 @@
 		tbody.innerHTML = '';
 		createCategoryHeader(tbody, texts.plugins);
 		const catData = data.plugins || {};
-		let items = Object.entries(catData).map(([slug, item]) => ({ item }));
+		let items = Object.entries(catData).map(([slug, item]) => ({ slug, item }));
 		items.sort((a, b) => {
 			const aVal = getSortValue(a.item, sortState.column);
 			const bVal = getSortValue(b.item, sortState.column);
 			return sortState.direction === 'desc' ? bVal - aVal : aVal - bVal;
 		});
-		items.forEach(({ item }) => {
+		items.forEach(({ slug, item }) => {
 			const name = getValue(item, c.NAME);
 			const version = getValue(item, c.VERSION);
 			const nameVersion = version ? `${name} <small>${version}</small>` : name;
+			const linkedName = getLinkedName('plugins', slug, nameVersion);
 			const fileCountDisplay = getDisplayValue(item, c.RESULT_COUNT, c.FILE_COUNT);
 			const opcacheDisplay = getDisplayValue(item, c.RESULT_OPCACHE, c.FILE_OPCACHE_SIZE);
 			const durationDisplay = getDisplayValue(item, c.RESULT_TIME, c.DURATION);
 			const row = document.createElement('tr');
 			row.innerHTML = `
-				<td>${nameVersion}</td>
+				<td>${linkedName}</td>
 				<td>${fileCountDisplay}</td>
 				<td>${opcacheDisplay}</td>
 				<td>${durationDisplay}</td>
