@@ -1,3 +1,8 @@
+== 1.4 | 24th May 2026
+* added section breakdown
+* added notice when Opcache is restricted.
+* simplified main file and require logic
+
 == 1.3.1 | 27th February 2026 ==
 * bugfix, added placeholder data when the theme is disabled to prevent warnings
 
@@ -15,6 +20,5 @@
 == 1.1 | 31st December 2025 ==
 * displaying results bugfix
 
-== 1.0 | 18th December 2025 ==
-
 * Initial Version
+== 1.0 | 18th December 2025 ==
