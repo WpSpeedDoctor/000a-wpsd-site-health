@@ -325,8 +325,6 @@ class Folder{
 
 			$memory_size = $this->opcache_scripts[$relative_filepath] ?? 0;
 	
-			$disk_size = file_exists($file) ? filesize($file) : 0;
-
 			$root_folder = $this->get_root_folder( $relative_filepath );
 
 			if( !isset($this->data[$name][$root_folder]) ){
@@ -360,6 +358,6 @@ class Folder{
 		}
 
 	}
-	
+
 }
 
