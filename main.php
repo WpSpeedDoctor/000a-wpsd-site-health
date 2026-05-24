@@ -34,6 +34,8 @@ function the_php_tab(){
 	$t = get_texts();
 
 	$content = get_required_files_markup();
+
+	$breakdown = get_opcache_breakdown_markup();
 	
 	$performance_stats= <<<HTML
 	<div id="wpsd-ttfb-wrap">
@@ -44,9 +46,11 @@ function the_php_tab(){
 
 	echo <<<HTML
 	<div class="health-check-body health-check-status-tab">
+		{$t->opcache_warning}
 		<p>{$t->php_bloat_title}</p>
 		{$performance_stats}
 		{$content}
+		{$breakdown}
 	</div>
 	HTML;
 }
@@ -134,11 +138,27 @@ function get_required_files_markup(){
 
 function get_texts(){
 
+	$warning_text =  __('Warning: OPcache is restricted so memory usage is not displayed.remove from php.ini settings `opcache.restrict_api=1` to get full details.', 'wpsd-site-health');
+
+	$warning_markup = <<<HTML
+	<div class="notice notice-warning is-dismissible">
+		<p>{$warning_text}</p>
+	</div>
+	HTML;
+
+	$opcache_warning = is_opcache_api_restricted() ? $warning_markup : '';
+
 	return (object)[
+		'opcache_warning'		=> $opcache_warning,
 		'php_bloat_title'		=> __('Identify what plugins and themes are making your site slow', 'wpsd-site-health'),
 		'ttfb'					=> __('Current page TTFB: ', 'wpsd-site-health'),
 		'resources_bloat_title'	=> __('List of enqueued resources that should not be present on this page:', 'wpsd-site-health'),
 		'no_resources'			=> __('All good here, no bloat.', 'wpsd-site-health'),
+		'breakdown'				=> __('Breakdown', 'wpsd-site-health'),
+		'core'					=> __('WordPress Core', 'wpsd-site-health'),
+		'plugins'				=> __('Plugins', 'wpsd-site-health'),
+		'themes'				=> __('Themes', 'wpsd-site-health'),
+		'no_opcache_files'		=> __('No OPcache files found.', 'wpsd-site-health'),
 	];
 }
 
@@ -147,7 +167,7 @@ purge_opcache();
 
 function purge_opcache(){
 
-	if(!function_exists('opcache_reset')){
+	if(!function_exists('opcache_reset') || is_opcache_api_restricted()){
 
 		return false;
 
@@ -164,6 +184,311 @@ function purge_opcache(){
 	opcache_reset();
 
 	return true;
+
+}
+
+function is_opcache_api_restricted(){
+
+	return (bool)ini_get('opcache.restrict_api');
+}
+
+function get_opcache_breakdown_markup(){
+
+	$t = get_texts();
+
+	$filepaths = [];
+
+	if(is_opcache_api_restricted()){
+
+		$filepaths = get_required_files();
+
+	}
+
+	if(empty($filepaths)){
+
+		if(!function_exists('opcache_get_status')){
+
+			return '';
+
+		}
+
+		$status = @opcache_get_status();
+
+		if(empty($status['scripts'])){
+
+			return '';
+
+		}
+
+		foreach($status['scripts'] as $data){
+
+			if(empty($data['full_path'])){
+
+				continue;
+
+			}
+
+			$filepaths[] = $data['full_path'];
+
+		}
+
+	}
+
+	$abs_path = wp_normalize_path(ABSPATH);
+
+	$abs_len = strlen($abs_path) - 1;
+
+	$plugin_names = get_plugin_names_by_slug();
+
+	$theme_names = get_theme_names_by_slug();
+
+	$roots = [
+		[
+			'type' => $t->themes,
+			'root' => '/wp-content/themes/',
+			'group' => '',
+		],
+		[
+			'type' => $t->plugins,
+			'root' => '/wp-content/plugins/',
+			'group' => '',
+		],
+		[
+			'type' => $t->core,
+			'root' => '/wp-admin/',
+			'group' => 'wp-admin',
+		],
+		[
+			'type' => $t->core,
+			'root' => '/wp-includes/',
+			'group' => 'wp-includes',
+		],
+	];
+
+	$groups = [];
+
+	foreach($filepaths as $file){
+
+		if(empty($file)){
+
+			continue;
+
+		}
+
+		$path = wp_normalize_path($file);
+
+		if(!str_starts_with($path, $abs_path)){
+
+			continue;
+
+		}
+
+		$relative_filepath = substr($path, $abs_len);
+
+		foreach($roots as $root_data){
+
+			if(!str_starts_with($relative_filepath, $root_data['root'])){
+
+				continue;
+
+			}
+
+			$type = $root_data['type'];
+
+			$group = $root_data['group'];
+
+			if(empty($group)){
+
+				$pieces = explode('/', $relative_filepath);
+
+				$group = $pieces[3] ?? '';
+
+			}
+
+			if(empty($group)){
+
+				continue;
+
+			}
+
+			if($type === $t->plugins){
+
+				if(str_ends_with($group, '.php')){
+
+					$group = basename($group, '.php');
+
+				}
+
+				$group = $plugin_names[$group] ?? $group;
+
+			}
+
+			if($type === $t->themes){
+
+				$group = $theme_names[$group] ?? $group;
+
+			}
+
+			$groups[$type][$group][] = $relative_filepath;
+
+			break;
+
+		}
+
+	}
+
+	$groups_html = '';
+
+	$group_order = [
+		$t->themes,
+		$t->plugins,
+		$t->core,
+	];
+
+	foreach($group_order as $type){
+
+		if(empty($groups[$type])){
+
+			continue;
+
+		}
+
+		$items = $groups[$type];
+
+		$items_html = '';
+
+		foreach($items as $group => $files){
+
+			usort($files, __NAMESPACE__ . '\sort_filepaths_by_folder');
+
+			$files_html = '';
+
+			foreach($files as $file){
+
+				$file = esc_html($file);
+
+				$files_html .= '<li><code>' . $file . '</code></li>';
+
+			}
+
+			$group_name = esc_html($group);
+
+			$anchor_type = '';
+
+			switch($type){
+				case $t->plugins:
+					$anchor_type = Consts::WP_PLUGINS;
+					break;
+				case $t->themes:
+					$anchor_type = Consts::WP_THEMES;
+					break;
+				case $t->core:
+					$anchor_type = Consts::WP_CORE;
+					break;
+			}
+
+			$section_id = $anchor_type ? get_opcache_breakdown_anchor_id($anchor_type, $group) : '';
+
+			$id_attr = $section_id ? ' id="' . esc_attr($section_id) . '"' : '';
+
+			$items_html .= <<<HTML
+			<section{$id_attr}>
+				<h5>{$group_name}</h5>
+				<ul>{$files_html}</ul>
+			</section>
+			HTML;
+
+		}
+
+		$groups_html .= <<<HTML
+		<section>
+			<h4>{$type}</h4>
+			{$items_html}
+		</section>
+		HTML;
+
+	}
+
+	if(empty($groups_html)){
+
+		$groups_html = $t->no_opcache_files;
+
+	}
+
+	$heading = $t->breakdown;
+
+	return <<<HTML
+	<section class="wpsd-opcache-breakdown">
+		<h3>{$heading}</h3>
+		{$groups_html}
+	</section>
+	HTML;
+
+}
+
+function get_opcache_breakdown_anchor_id($type, $name){
+
+	return 'wpsd-opcache-' . $type . '-' . sanitize_title($name);
+
+}
+
+function sort_filepaths_by_folder($a, $b){
+
+	$a_folder = dirname($a);
+
+	$b_folder = dirname($b);
+
+	$folder_sort = strcmp($a_folder, $b_folder);
+
+	if($folder_sort !== 0){
+
+		return $folder_sort;
+
+	}
+
+	return strcmp($a, $b);
+
+}
+
+function get_plugin_names_by_slug(){
+
+	if(!function_exists('get_plugins')){
+
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	}
+
+	$plugin_names = [];
+
+	foreach(get_plugins() as $plugin_file => $plugin_data){
+
+		$slug = dirname($plugin_file);
+
+		if($slug === '.'){
+
+			$slug = basename($plugin_file, '.php');
+
+		}
+
+		$plugin_names[$slug] = $plugin_data['Name'] ?? $slug;
+
+	}
+
+	return $plugin_names;
+
+}
+
+function get_theme_names_by_slug(){
+
+	$theme_names = [];
+
+	foreach(wp_get_themes() as $slug => $theme){
+
+		$theme_names[$slug] = $theme->get('Name') ?: $slug;
+
+	}
+
+	return $theme_names;
 
 }
 
@@ -185,10 +510,13 @@ function pass_data_to_js(){
 
 	$folder = new Folder();
 
+	$data = $folder->get_files();
+
 	$display_data = [
 
 		'consts' => $consts,
-		'data' => $folder->get_files(),
+		'data' => $data,
+		'anchors' => get_opcache_breakdown_anchor_ids($data),
 		'texts' => [
 			'core'		=> __('WordPress Core', 'wpsd-site-health'),
 			'plugins'	=> __('Plugins', 'wpsd-site-health'),
@@ -201,6 +529,30 @@ function pass_data_to_js(){
 	wp_enqueue_script(Consts::THIS_PLUGIN_SLUG);
 
 	wp_localize_script(Consts::THIS_PLUGIN_SLUG, Consts::THIS_PLUGIN_JS_SLUG, $display_data);
+}
+
+function get_opcache_breakdown_anchor_ids($data){
+
+	$anchors = [
+		Consts::WP_PLUGINS => [],
+		Consts::WP_THEMES => [],
+		Consts::WP_CORE => [],
+	];
+
+	foreach($anchors as $type => $items){
+
+		foreach($data[$type] ?? [] as $slug => $item){
+
+			$name = $item[Consts::NAME] ?? $slug;
+
+			$anchors[$type][$slug] = get_opcache_breakdown_anchor_id($type, $name);
+
+		}
+
+	}
+
+	return $anchors;
+
 }
 
 add_action('shutdown', __NAMESPACE__.'\print_performance_data', PHP_INT_MAX);
