@@ -10,6 +10,7 @@ $t=(object)[
 ];
 
 echo <<<HTML
+<style>{$t->css}</style>
 <table id="wpsdsh-table">
 	<thead>
 		<tr>
@@ -23,8 +24,5 @@ echo <<<HTML
 	<tbody id="tbody-themes"></tbody>
 	<tbody id="tbody-core"></tbody>
 </table>
-
-<style>{$t->css}</style>
-
 HTML;
 ?>
