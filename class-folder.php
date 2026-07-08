@@ -14,7 +14,11 @@ class Folder{
 
 	private int $abs_len;
 
-	private array $data = [ Consts::WP_CORE => [] ];
+	private array $data = [
+		Consts::WP_CORE => [],
+		Consts::WP_PLUGINS => [],
+		Consts::WP_THEMES => [],
+	];
 
 	private array $opcache_scripts = [];
 
@@ -119,7 +123,6 @@ class Folder{
 					Consts::DURATION
 				);
 
-			//passes 0 for sorting into JS when data not available
 			if( !is_numeric($plugin[Consts::DURATION]??false) ){
 				$plugin[Consts::DURATION] = 0;
 			}
@@ -226,7 +229,7 @@ class Folder{
 
 		foreach( $plugins_time as $plugin_slug => $duration ){
 
-			$this->data['plugins'][$plugin_slug][Consts::DURATION] = $duration;
+			$this->data[Consts::WP_PLUGINS][$plugin_slug][Consts::DURATION] = $duration;
 		}
 		
 		foreach( $this->data[Consts::WP_THEMES] as $theme_slug => $theme_data ){
@@ -249,6 +252,12 @@ class Folder{
 
 	private function add_versions(){
 
+		if(!function_exists('get_plugin_data')){
+
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		}
+
 		// Single site OR site-specific plugins
 		$active_plugins = get_option('active_plugins', []);
 		
@@ -261,6 +270,13 @@ class Folder{
 		foreach($active_plugins as $plugin_file){
 			$plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin_file);
 			$plugin_dir = dirname($plugin_file);
+
+			if($plugin_dir === '.'){
+
+				$plugin_dir = basename($plugin_file, '.php');
+
+			}
+
 			$version = $plugin_data['Version'] ?? 'unknown';
 			$name = $plugin_data['Name'] ?? 'unknown';
 			
