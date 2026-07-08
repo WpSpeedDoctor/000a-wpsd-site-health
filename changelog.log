@@ -1,3 +1,10 @@
+== 1.5.1 | 8th July 2026
+* wpsd darmode CSS added
+
+== 1.5 | 25th May 2026
+* breakdown section, changed logic of getting files from opcache to get_required_files()
+* removed gethering required filed from shutdown to plugin_loaded.
+
 == 1.4 | 24th May 2026
 * added section breakdown
 * added notice when Opcache is restricted.
