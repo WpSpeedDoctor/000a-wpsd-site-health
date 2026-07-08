@@ -4,6 +4,8 @@ namespace WPSD\site_health;
 
 abstract class Consts{
 
+	const PLUGIN_VER = '1.5.1';
+
 	const THIS_PLUGIN_SLUG = 'wpsd-bloat';
 
 	const THIS_PLUGIN_JS_SLUG = 'WPSDsH';
