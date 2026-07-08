@@ -2,27 +2,18 @@
 
 namespace WPSD\site_health;
 
-$t=(object)[
-	'file_count'	=> __('File Count', 'wpsd-site-health'),
-	'opcache_size'	=> __('OPcache Size', 'wpsd-site-health'),
-	'duration'		=> __('Duration', 'wpsd-site-health'),
-	'css'			=> file_get_contents( __DIR__.'/style.css' ),
-];
+$css = file_get_contents( __DIR__.'/style.css' );
+
+require_once __DIR__.'/class-folder.php';
+
+$folder = new Folder();
+
+$data = $folder->get_files();
+
+$table = get_required_files_table_markup($data);
 
 echo <<<HTML
-<style>{$t->css}</style>
-<table id="wpsdsh-table">
-	<thead>
-		<tr>
-			<th></th>
-			<th data-sort="file_count">{$t->file_count}<span class="sort-indicator"></span></th>
-			<th data-sort="opcache_size">{$t->opcache_size}<span class="sort-indicator"></span></th>
-			<th data-sort="duration">{$t->duration}<span class="sort-indicator"></span></th>
-		</tr>
-	</thead>
-	<tbody id="tbody-plugins"></tbody>
-	<tbody id="tbody-themes"></tbody>
-	<tbody id="tbody-core"></tbody>
-</table>
+<style>{$css}</style>
+{$table}
 HTML;
 ?>
