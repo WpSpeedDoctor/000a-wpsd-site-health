@@ -5,8 +5,8 @@ namespace WPSD\site_health;
 /*
 * Plugin Name: Site Health addon by WP Speed Doctor
 * Description: Adds into Site Health menu tabs with bloated PHP plugins and CSS/JS files. 
-* Version: 1.4
-* Updated: 2026-05-24
+* Version: 1.5.1
+* Updated: 2026-07-08
 * Author: WP Speed Doctor
 * Author URI: https://wpspeeddoctor.com/
 * Text Domain: wpsd-site-health
