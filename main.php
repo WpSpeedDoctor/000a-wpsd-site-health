@@ -79,6 +79,12 @@ function measure_plugin_time($plugin_path, $retrieve_data = false ){
 
 	$plugin_slug = basename( dirname( $plugin_path ) );
 
+	if($plugin_slug === '.'){
+
+		$plugin_slug = basename($plugin_path, '.php');
+
+	}
+
 	static $start_time;
 
 	$time_us = $plugin_slug === Consts::get_self_dir_slug() ? false : get_hrtime_ms( $start_time, hrtime(true) ); 
@@ -131,6 +137,130 @@ function get_required_files_markup(){
 	require __DIR__.'/display-data.php';
 
 	return ob_get_clean();
+
+}
+
+function get_required_files_table_markup($data){
+
+	$texts = [
+		'file_count' => __('File Count', 'wpsd-site-health'),
+		'opcache_size' => __('OPcache Size', 'wpsd-site-health'),
+		'duration' => __('Duration', 'wpsd-site-health'),
+		'plugins' => __('Plugins', 'wpsd-site-health'),
+		'themes' => __('Themes', 'wpsd-site-health'),
+		'core' => __('WordPress Core', 'wpsd-site-health'),
+	];
+
+	$anchors = get_opcache_breakdown_anchor_ids($data);
+
+	$plugins_html = get_required_files_table_rows($data[Consts::WP_PLUGINS] ?? [], Consts::WP_PLUGINS, $texts['plugins'], $anchors);
+
+	$themes_html = get_required_files_table_rows($data[Consts::WP_THEMES] ?? [], Consts::WP_THEMES, $texts['themes'], $anchors);
+
+	$core_html = get_required_files_table_rows($data[Consts::WP_CORE] ?? [], Consts::WP_CORE, $texts['core'], $anchors);
+
+	$file_count = $texts['file_count'];
+
+	$opcache_size = $texts['opcache_size'];
+
+	$duration = $texts['duration'];
+
+	return <<<HTML
+	<table id="wpsdsh-table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>{$file_count}</th>
+				<th>{$opcache_size}</th>
+				<th>{$duration}</th>
+			</tr>
+		</thead>
+		<tbody>{$plugins_html}</tbody>
+		<tbody>{$themes_html}</tbody>
+		<tbody>{$core_html}</tbody>
+	</table>
+	HTML;
+
+}
+
+function get_required_files_table_rows($items, $type, $heading, $anchors){
+
+	if(empty($items)){
+
+		return '';
+
+	}
+
+	if($type === Consts::WP_PLUGINS){
+
+		uasort($items, __NAMESPACE__ . '\sort_items_by_duration');
+
+	}
+
+	$heading = esc_html($heading);
+
+	$rows = <<<HTML
+	<tr>
+		<td colspan="4" class="category-header">{$heading}</td>
+	</tr>
+	HTML;
+
+	foreach($items as $slug => $item){
+
+		$rows .= get_required_files_table_row($slug, $item, $type, $anchors);
+
+	}
+
+	return $rows;
+
+}
+
+function get_required_files_table_row($slug, $item, $type, $anchors){
+
+	$name = $type === Consts::WP_CORE ? $slug : ($item[Consts::NAME] ?? $slug);
+
+	$version = $item[Consts::VERSION] ?? '';
+
+	$name = esc_html($name);
+
+	$version = esc_html($version);
+
+	$name_version = $version ? $name . ' <small>' . $version . '</small>' : $name;
+
+	$anchor = $anchors[$type][$slug] ?? '';
+
+	if($anchor){
+
+		$anchor = esc_attr($anchor);
+
+		$name_version = '<a href="#' . $anchor . '">' . $name_version . '</a>';
+
+	}
+
+	$file_count = $item[Consts::RESULT_COUNT] ?? $item[Consts::FILE_COUNT] ?? '';
+
+	$opcache_size = $item[Consts::RESULT_OPCACHE] ?? $item[Consts::FILE_OPCACHE_SIZE] ?? '';
+
+	$duration = $item[Consts::RESULT_TIME] ?? $item[Consts::DURATION] ?? '';
+
+	return <<<HTML
+	<tr>
+		<td>{$name_version}</td>
+		<td>{$file_count}</td>
+		<td>{$opcache_size}</td>
+		<td>{$duration}</td>
+	</tr>
+	HTML;
+
+}
+
+function sort_items_by_duration($a, $b){
+
+	$a_duration = (int)($a[Consts::DURATION] ?? 0);
+
+	$b_duration = (int)($b[Consts::DURATION] ?? 0);
+
+	return $b_duration <=> $a_duration;
 
 }
 
@@ -196,41 +326,11 @@ function get_opcache_breakdown_markup(){
 
 	$t = get_texts();
 
-	$filepaths = [];
-
-	if(is_opcache_api_restricted()){
-
-		$filepaths = get_required_files();
-
-	}
+	$filepaths = get_required_files();
 
 	if(empty($filepaths)){
 
-		if(!function_exists('opcache_get_status')){
-
-			return '';
-
-		}
-
-		$status = @opcache_get_status();
-
-		if(empty($status['scripts'])){
-
-			return '';
-
-		}
-
-		foreach($status['scripts'] as $data){
-
-			if(empty($data['full_path'])){
-
-				continue;
-
-			}
-
-			$filepaths[] = $data['full_path'];
-
-		}
+		return '';
 
 	}
 
@@ -367,7 +467,7 @@ function get_opcache_breakdown_markup(){
 
 				$file = esc_html($file);
 
-				$files_html .= '<li><code>' . $file . '</code></li>';
+				$files_html .= '<li><code class="wpsd-no-bg">' . $file . '</code></li>';
 
 			}
 
@@ -493,42 +593,14 @@ function get_theme_names_by_slug(){
 }
 
 
-add_action('admin_enqueue_scripts', __NAMESPACE__ . '\pass_data_to_js', PHP_INT_MAX);
+add_action('admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_site_health_script', PHP_INT_MAX);
 
-function pass_data_to_js(){
+function enqueue_site_health_script(){
 
-	$consts = (new \ReflectionClass( __NAMESPACE__ . '\Consts'))->getConstants();
-
-	foreach(array_keys($consts) as $key){
-		//remove EVAL constants
-		if( $key[0] !== 'E' && $key[0] !== 'T' ) continue;
-
-		unset($consts[$key]);
-	}
-
-	require __DIR__.'/class-folder.php';
-
-	$folder = new Folder();
-
-	$data = $folder->get_files();
-
-	$display_data = [
-
-		'consts' => $consts,
-		'data' => $data,
-		'anchors' => get_opcache_breakdown_anchor_ids($data),
-		'texts' => [
-			'core'		=> __('WordPress Core', 'wpsd-site-health'),
-			'plugins'	=> __('Plugins', 'wpsd-site-health'),
-			'themes'	=> __('Themes', 'wpsd-site-health')
-			]
-	];
-	
-	wp_register_script(Consts::THIS_PLUGIN_SLUG, plugins_url('script.js', __FILE__), [], false, true);
+	wp_register_script(Consts::THIS_PLUGIN_SLUG, plugins_url('script.js', __FILE__), [], Consts::PLUGIN_VER, true);
 
 	wp_enqueue_script(Consts::THIS_PLUGIN_SLUG);
 
-	wp_localize_script(Consts::THIS_PLUGIN_SLUG, Consts::THIS_PLUGIN_JS_SLUG, $display_data);
 }
 
 function get_opcache_breakdown_anchor_ids($data){
