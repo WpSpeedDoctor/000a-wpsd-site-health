@@ -1,0 +1,41 @@
+== 1.6 | 14th,15th,16th October 2026
+* bring back the data colection from shutdown hook
+* move CSS/JS into PHP bloat, renames WP Bloat
+* added CSS/JS as column in main table
+* added sorting
+* added design
+* added texts
+* added sending data
+* added selection to sent only part of data
+
+== 1.5.1 | 8th July 2026
+* wpsd darkmode CSS added
+
+== 1.5 | 25th May 2026
+* breakdown section, changed logic of getting files from opcache to get_required_files()
+* removed gethering required filed from shutdown to plugin_loaded.
+
+== 1.4 | 24th May 2026
+* added section breakdown
+* added notice when Opcache is restricted.
+* simplified main file and require logic
+
+== 1.3.1 | 27th February 2026 ==
+* bugfix, added placeholder data when the theme is disabled to prevent warnings
+
+== 1.3 | 6th February 2026 ==
+* testing
+* small bug fixes
+* language
+* multisite testing
+
+== 1.2 | 15th January 2026 ==
+* Added current page TTFB value
+* Added tab CSS/JS bloat
+* code polish and testing
+
+== 1.1 | 31st December 2025 ==
+* displaying results bugfix
+
+* Initial Version
+== 1.0 | 18th December 2025 ==
