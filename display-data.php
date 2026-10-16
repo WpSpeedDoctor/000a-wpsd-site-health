@@ -8,7 +8,7 @@ $submission = <<<HTML
 <p role="status">{$texts['sent']}</p>
 HTML;
 
-if(!get_transient('wpsd_bloat_sent_'.get_current_user_id())){
+if(!get_transient(Consts::KEY_TRANSIENT_SENT)){
 
 	$submission = <<<HTML
 	<div id="wpsd-send-actions">

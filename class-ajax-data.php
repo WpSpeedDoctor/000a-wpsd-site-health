@@ -62,9 +62,7 @@ abstract class Ajax_Data{
 
 		}
 
-		$transient_key = 'wpsd_bloat_sent';
-
-		if(get_transient($transient_key)){
+		if(get_transient(Consts::KEY_TRANSIENT_SENT)){
 
 			wp_send_json_success();
 
@@ -134,7 +132,7 @@ abstract class Ajax_Data{
 
 		if(wp_get_environment_type() !== 'development'){
 
-			set_transient($transient_key, true, HOUR_IN_SECONDS);
+			set_transient(Consts::KEY_TRANSIENT_SENT, true, HOUR_IN_SECONDS);
 		}		
 
 		wp_send_json_success();

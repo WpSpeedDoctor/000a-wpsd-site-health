@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Site Health addon by WP Speed Doctor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-24 13:15+0000\n"
+"POT-Creation-Date: 2026-10-16 12:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,89 +16,284 @@ msgstr ""
 "X-Loco-Version: 2.8.1; wp-6.9.1; php-8.3.28\n"
 "X-Domain: wpsd-site-health"
 
+#: main.php:90
+msgid "Additional files loaded by shutdown"
+msgstr ""
+
 #. Description of the plugin
 msgid ""
 "Adds into Site Health menu tabs with bloated PHP plugins and CSS/JS files."
 msgstr ""
 
-#: main.php:156
+#: main.php:89
+msgid "after_setup_theme"
+msgstr ""
+
+#: main.php:95
 msgid "All good here, no bloat."
 msgstr ""
 
-#: main.php:157
-msgid "Breakdown"
+#: main.php:92
+msgid "Back to top"
 msgstr ""
 
-#: main.php:13
+#: main.php:60
+msgid ""
+"By sending your data, you help build the case for reform in how WordPress is "
+"developed and encourage developers to learn more efficient ways to build "
+"within its ecosystem. We plan to use this data in graphs that track how "
+"plugins grow across versions, making the problem visible and measurable."
+msgstr ""
+
+#: main.php:64
+msgid "Close"
+msgstr ""
+
+#: main.php:56
+msgid "Contribute this data"
+msgstr ""
+
+#: main.php:55
+msgid "Contribute to our research"
+msgstr ""
+
+#: main.php:97
+msgid "CSS"
+msgstr ""
+
+#: main.php:83
+msgid "CSS/JS"
+msgstr ""
+
+#: main.php:93
 msgid "CSS/JS Bloat"
 msgstr ""
 
-#: main.php:154
-msgid "Current page TTFB: "
+#: main.php:77
+msgid "Current page TTFB:"
 msgstr ""
 
-#: display-data.php:8
-msgid "Duration"
+#: main.php:73
+msgid "Data sent successfully."
 msgstr ""
 
-#: display-data.php:6
+#: main.php:94
+msgid "Enqueued resources on this page:"
+msgstr ""
+
+#: main.php:80
 msgid "File Count"
+msgstr ""
+
+#: main.php:78
+msgid ""
+"File counts and OPcache sizes show plugins_loaded → shutdown for plugins and "
+"core, and after_setup_theme → shutdown for themes."
 msgstr ""
 
 #. Author URI of the plugin
 msgid "https://wpspeeddoctor.com/"
 msgstr ""
 
-#: main.php:153
-msgid "Identify what plugins and themes are making your site slow"
+#: main.php:65
+msgid "I agree with"
 msgstr ""
 
-#: main.php:155
-msgid "List of enqueued resources that should not be present on this page:"
+#: main.php:54
+msgid "Identify which plugins and themes are loading unnecesary code."
 msgstr ""
 
-#: class-folder.php:42
+#: main.php:96
+msgid "JS"
+msgstr ""
+
+#: main.php:82
+msgid "Load Duration"
+msgstr ""
+
+#: main.php:99
 msgid "ms"
 msgstr ""
 
-#: class-folder.php:40
+#: main.php:98
 msgid "N/A"
 msgstr ""
 
-#: main.php:161
-msgid "No OPcache files found."
+#: main.php:79
+msgid "Name"
 msgstr ""
 
-#: display-data.php:7
+#: main.php:68
+msgid ""
+"Only technical performance data is included: plugin, theme and core names, "
+"slugs and versions, file counts, OPcache sizes, load times, resource counts, "
+"locale and TTFB. The submission does not record IP addresses, website URLs, "
+"names, email addresses or personal identifiers."
+msgstr ""
+
+#: main.php:102
+msgid ""
+"OPcache data is unavailable or restricted. Check your PHP OPcache settings."
+msgstr ""
+
+#: main.php:81
 msgid "OPcache Size"
 msgstr ""
 
-#: main.php:12
-msgid "PHP Bloat"
+#: main.php:61
+msgid ""
+"Our mission is to make WordPress the most efficient CMS ecosystem—or, at the "
+"very least, give you the tools to identify plugins and themes built with "
+"efficiency in mind."
 msgstr ""
 
-#: main.php:159 main.php:522
+#: main.php:87
+msgid "PHP files"
+msgstr ""
+
+#: main.php:84
 msgid "Plugins"
 msgstr ""
 
-#. Name of the plugin
-msgid "Site Health addon by WP Speed Doctor"
+#: main.php:88
+msgid "plugins_loaded"
 msgstr ""
 
-#: main.php:160 main.php:523
+#: main.php:67
+msgid "Privacy policy"
+msgstr ""
+
+#: main.php:66
+msgid "privacy policy"
+msgstr ""
+
+#: main.php:100
+msgid "s"
+msgstr ""
+
+#: main.php:72
+msgid "Sending…"
+msgstr ""
+
+#: main.php:69
+msgid ""
+"Sharing is optional. The data is intended for performance research and "
+"graphs comparing versions, to help improve efficiency across the WordPress "
+"ecosystem."
+msgstr ""
+
+#: main.php:91
+msgid "Show remaining files"
+msgstr ""
+
+#: main.php:101
+msgid "Sort by this column"
+msgstr ""
+
+#: class-ajax-data.php:129
+msgid ""
+"The data receiver returned an invalid response or did not accept the data. "
+"Please try again later."
+msgstr ""
+
+#: class-ajax-data.php:111
+msgid "The data receiver returned HTTP %d. Please try again later."
+msgstr ""
+
+#: class-ajax-data.php:79
+msgid "The performance data is invalid. Refresh the page and try again."
+msgstr ""
+
+#: main.php:62
+msgid ""
+"The submission includes plugin and theme names, slugs and versions, PHP file "
+"counts, OPcache sizes, load durations, CSS and JavaScript counts, and this "
+"page’s TTFB. Sending is optional and requires your agreement to the privacy "
+"policy."
+msgstr ""
+
+#: class-ajax-data.php:59
+msgid "The submission is invalid or privacy consent is missing."
+msgstr ""
+
+#: main.php:85
 msgid "Themes"
 msgstr ""
 
-#: main.php:141
+#: main.php:76 class-ajax-data.php:115
 msgid ""
-"Warning: OPcache is restricted so memory usage is not displayed.remove from "
-"php.ini settings `opcache.restrict_api=1` to get full details."
+"Too many requests (HTTP 429). Wait at least one minute before trying again."
 msgstr ""
 
-#: main.php:158 main.php:521
+#: class-ajax-data.php:101
+#, php-format
+msgid "Unable to connect to the data receiver: %s"
+msgstr ""
+
+#: main.php:75
+#, php-format
+msgid "Unable to send data (HTTP %s). Please try again later."
+msgstr ""
+
+#: main.php:74
+msgid "Unable to send data. Please try again."
+msgstr ""
+
+#: main.php:71
+msgid ""
+"Under the GDPR, genuinely anonymous data that cannot identify a person falls "
+"outside personal data rules. Please do not submit if custom plugin or theme "
+"names contain personal information."
+msgstr ""
+
+#: main.php:57
+msgid "Unselect"
+msgstr ""
+
+#: main.php:63
+msgid ""
+"Visualizations of the collected data are currently under construction and "
+"will be available for everyone to browse for free."
+msgstr ""
+
+#: main.php:58
+msgid "Why send the data?"
+msgstr ""
+
+#: main.php:86
 msgid "WordPress Core"
+msgstr ""
+
+#: main.php:59
+msgid ""
+"WordPress is bloated. Across plugins, themes, and core, developers keep "
+"adding code without enough consideration for whether it is really necessary "
+"or what it costs in performance."
+msgstr ""
+
+#: main.php:13
+msgid "WP Bloat"
 msgstr ""
 
 #. Author of the plugin
 msgid "WP Speed Doctor"
+msgstr ""
+
+#. Name of the plugin
+msgid "WPSD Site Health"
+msgstr ""
+
+#: class-ajax-data.php:43
+msgid "You do not have permission to send data."
+msgstr ""
+
+#: class-ajax-data.php:51
+msgid "Your session has expired. Refresh the page and try again."
+msgstr ""
+
+#: main.php:70
+msgid ""
+"Your WordPress login is used locally to authorize the request. A local, "
+"account-specific flag prevents repeat submissions for one hour; it is "
+"separate from the performance data."
 msgstr ""

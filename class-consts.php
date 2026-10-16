@@ -59,6 +59,10 @@ abstract class Consts{
 
 	const EVAL_THEME_MAX_TIME = 5; //5 ms
 
+	//constants related to transient
+
+	const KEY_TRANSIENT_SENT = 'wpsd-site-health-sent';
+
 
 	static public function get_self_dir_slug(){
 

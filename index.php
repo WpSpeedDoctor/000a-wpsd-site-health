@@ -6,7 +6,7 @@ namespace WPSD\site_health;
 * Plugin Name: WPSD Site Health
 * Description: Adds into Site Health menu tabs with bloated PHP plugins and CSS/JS files. 
 * Version: 1.6
-* Updated: 2026-10-15
+* Updated: 2026-10-16
 * Author: WP Speed Doctor
 * Author URI: https://wpspeeddoctor.com/
 * Text Domain: wpsd-site-health
@@ -53,6 +53,8 @@ function load_language_domain(){
 
 function ajax_loader(){
 
+	require __DIR__.'/class-consts.php';
+
 	require __DIR__.'/class-ajax-data.php';
 	
 	Ajax_Data::receive_bloat_data();
@@ -65,5 +67,3 @@ function activate_plugin(){
 	require __DIR__.'/plugin-activation.php';	
 
 }
-
-require __DIR__.'/fetch.php';
