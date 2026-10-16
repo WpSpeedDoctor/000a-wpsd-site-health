@@ -4,10 +4,23 @@ namespace WPSD\site_health;
 
 abstract class Consts{
 
+<<<<<<< HEAD
 	const PLUGIN_VER = '1.6';
 
 	const THIS_PLUGIN_SLUG = 'wpsd-bloat';
 
+=======
+	const PLUGIN_VER = '1.5.1';
+
+	const THIS_PLUGIN_SLUG = 'wpsd-bloat';
+
+	const THIS_PLUGIN_JS_SLUG = 'WPSDsH';
+
+	const TAB_SLUG_PHP = 'wpsd-php-bloat';
+
+	const TAB_SLUG_RESOURCES = 'wpsd-resources-bloat';
+
+>>>>>>> origin/main
 	const WP_INCLUDES = 'wp-includes';
 
 	const WP_ADMIN = 'wp-admin';
@@ -20,6 +33,7 @@ abstract class Consts{
 
 	const WP_THEMES = 'themes';
 
+<<<<<<< HEAD
 	const KEY_OPCACHE_SIZE = 1;
 
 	const KEY_FILE_COUNT = 2;
@@ -30,6 +44,19 @@ abstract class Consts{
 
 	const KEY_NAME = 5;
 
+=======
+	const FILE_OPCACHE_SIZE = 1;
+
+	const FILE_COUNT = 2;
+
+	const VERSION = 3;
+
+	const SLUG = 4;
+
+	const NAME = 5;
+
+	const HASH = 6;
+>>>>>>> origin/main
 
 	//constants related to measuring time
 
@@ -57,7 +84,11 @@ abstract class Consts{
 
 	const EVAL_THEME_MAX_OPCACHE = 50*1024;
 
+<<<<<<< HEAD
 	const EVAL_THEME_MAX_TIME = 5; //5 ms
+=======
+	const EVAL_THEME_MAX_TIME = 2; //2 ms
+>>>>>>> origin/main
 
 
 	static public function get_self_dir_slug(){
@@ -70,4 +101,8 @@ abstract class Consts{
 
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main

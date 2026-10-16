@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 == 1.6 | 14th,15th,16th October 2026
 * bring back the data colection from shutdown hook
 * move CSS/JS into PHP bloat, renames WP Bloat
@@ -10,6 +11,10 @@
 
 == 1.5.1 | 8th July 2026
 * wpsd darkmode CSS added
+=======
+== 1.5.1 | 8th July 2026
+* wpsd darmode CSS added
+>>>>>>> origin/main
 
 == 1.5 | 25th May 2026
 * breakdown section, changed logic of getting files from opcache to get_required_files()
@@ -38,4 +43,8 @@
 * displaying results bugfix
 
 * Initial Version
+<<<<<<< HEAD
 == 1.0 | 18th December 2025 ==
+=======
+== 1.0 | 18th December 2025 ==
+>>>>>>> origin/main

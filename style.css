@@ -121,6 +121,7 @@ body.wpsd-darkmode {
 	white-space: normal;
 	word-break: break-word;
 }
+<<<<<<< HEAD
 #wpsdsh-table th button {
 	padding: 0;
 	border: 0;
@@ -262,3 +263,5 @@ body.wpsd-darkmode button#wpsd-contribute
 {
 	background-color: var(--wpsd-color-bg-dark)!important;
 }
+=======
+>>>>>>> origin/main
